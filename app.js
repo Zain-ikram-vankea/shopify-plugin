@@ -3,16 +3,16 @@ const path = require('path');
 const cors = require('cors');
 const fs = require('fs')
 const crypto = require('crypto');
+const axios = require('axios');
+
 
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const API_KEY = '2baa3481d2ab3900eb89332f94d34617';     // Jo tumhe mila hai
 const API_SECRET = 'a1fd8a0812910e30511f58530231490b'; // Jo tumhe mila hai
-//    // apni secret key yahan daalo
 const SCOPES = 'read_products,write_products'; // app ke liye permissions
 const FORWARDING_ADDRESS = 'https://shopify-plugin-production-781a.up.railway.app/'; // apni app ka public URL
-// Middleware
 app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/data', express.static(path.join(__dirname, 'data')));
