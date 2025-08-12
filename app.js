@@ -7,11 +7,11 @@ const crypto = require('crypto');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-
-const API_KEY = '8aec735609afb23c90459280f4d04b22';           // apni API key yahan daalo
-const API_SECRET = '388ff0786cf5902af5a8a4c58797f188';     // apni secret key yahan daalo
+const API_KEY = '2baa3481d2ab3900eb89332f94d34617';     // Jo tumhe mila hai
+const API_SECRET = 'a1fd8a0812910e30511f58530231490b'; // Jo tumhe mila hai
+//    // apni secret key yahan daalo
 const SCOPES = 'read_products,write_products'; // app ke liye permissions
-const FORWARDING_ADDRESS = 'https://3d-model-project.myshopify.com/'; // apni app ka public URL
+const FORWARDING_ADDRESS = 'https://shopify-plugin-production-781a.up.railway.app/'; // apni app ka public URL
 // Middleware
 app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -19,11 +19,12 @@ app.use('/data', express.static(path.join(__dirname, 'data')));
 app.use('/models', express.static(path.join(__dirname, 'models')));
 
 
-
+// Security ke liye random state banane ka function
 function generateNonce() {
   return crypto.randomBytes(16).toString('hex');
 }
-// Route 1: Shopify OAuth Start
+
+// Step 1: /auth route — user ko Shopify authorization page pe bhejta hai
 app.get('/auth', (req, res) => {
   const shop = req.query.shop;
   if (!shop) {
@@ -37,29 +38,29 @@ app.get('/auth', (req, res) => {
   res.redirect(installUrl);
 });
 
-// Route 2: Shopify OAuth Callback
+// Step 2: /auth/callback — Shopify se authorization code leta hai aur access token ke liye request bhejta hai
 app.get('/auth/callback', async (req, res) => {
   const { shop, code, state } = req.query;
 
-  // TODO: verify 'state' parameter for security
+  // TODO: yahan state verify karo
 
   try {
-    const accessTokenResponse = await axios.post(`https://${shop}/admin/oauth/access_token`, {
+    const tokenResponse = await axios.post(`https://${shop}/admin/oauth/access_token`, {
       client_id: API_KEY,
       client_secret: API_SECRET,
       code,
     });
 
-    const accessToken = accessTokenResponse.data.access_token;
+    const accessToken = tokenResponse.data.access_token;
 
-    // Ab accessToken mil gaya hai, ise database ya memory me save karo
-
-    res.send('App successfully installed! Access token: ' + accessToken);
+    // Ab access token mil gaya, isse database me save karo ya jahan chaho
+    res.send('App installed! Access Token: ' + accessToken);
   } catch (error) {
     console.error(error);
-    res.status(500).send('Error during access token exchange');
+    res.status(500).send('Error exchanging token');
   }
 });
+
 
 
 
