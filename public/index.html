@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link href="/css/style.css" rel="stylesheet">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.162.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.162.0/examples/jsm/"
+      }
+    }
+  </script>
+  <title>Van Customizer</title>
+</head>
+<body>
+  <div id="sidebar">
+    <h2>Parts</h2>
+    <ul id="parts-list">
+      <li class="part-item" data-part-id="part1">
+        <button>
+          <img src="" alt="" width="40" height="40" />
+          <span>Loading...</span>
+        </button>
+      </li>
+      <li class="part-item" data-part-id="part2">
+        <button>
+          <img src="" alt="" width="40" height="40" />
+          <span>Loading...</span>
+        </button>
+      </li>
+      <!-- Aur jitne parts chahiye -->
+    </ul>
+    <button id="reset-btn">Reset Parts</button>
+
+  </div>
+
+
+  <div id="viewer" style="width: 800px; height: 600px;"></div>
+
+  <script type="module" src="/js/main.js"></script>
+</body>
+</html>
