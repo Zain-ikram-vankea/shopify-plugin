@@ -6,11 +6,10 @@ const crypto = require('crypto');
 const axios = require('axios');
 
 
-
 const app = express();
 const PORT = process.env.PORT || 3000;
-const API_KEY = '2baa3481d2ab3900eb89332f94d34617';     // Jo tumhe mila hai
-const API_SECRET = 'a1fd8a0812910e30511f58530231490b'; // Jo tumhe mila hai
+const API_KEY = 'cb9e877fbdd4b8b9a2c5819fb1e5ced1';     // Jo tumhe mila hai
+const API_SECRET = 'a3e8290d7e30b6118f61a0094b8aad7d'; // Jo tumhe mila hai
 const SCOPES = 'read_products,write_products'; // app ke liye permissions
 const FORWARDING_ADDRESS = 'https://shopify-plugin-production-781a.up.railway.app'; // apni app ka public URL
 app.use(cors());
@@ -62,8 +61,34 @@ app.get('/auth/callback', async (req, res) => {
 });
 
 
+async function getProducts(shop, accessToken) {
+  const response = await axios.get(`https://${shop}/admin/api/2023-07/products.json`, {
+    headers: {
+      'X-Shopify-Access-Token': accessToken,
+      'Content-Type': 'application/json'
+    }
+  });
+  return response.data.products;
+}
 
 
+
+app.get('/products', async (req, res) => {
+  const shop = req.query.shop;           // shop domain, e.g. your-store.myshopify.com
+  const accessToken = req.query.token;  // access token, ya apne storage se fetch karo
+
+  if (!shop || !accessToken) {
+    return res.status(400).send('Missing shop or access token');
+  }
+
+  try {
+    const products = await getProducts(shop, shpua_ded178cce006e9ab590c3031008200e4);
+    res.json(products);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error fetching products');
+  }
+});
 
 
 
