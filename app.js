@@ -12,7 +12,7 @@ app.use(cors());
 
 
 const PORT = process.env.PORT || 3000;
-
+app.use('/data', express.static(path.join(__dirname, 'data')));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/models', express.static(path.join(__dirname, 'models')));
 app.use('/js/three', express.static(path.join(__dirname, 'node_modules/three/build')));
