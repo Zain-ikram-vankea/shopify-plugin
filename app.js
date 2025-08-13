@@ -2,15 +2,20 @@ require('dotenv').config()
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const { connectDB } = require('./db/db');
 const Parts = require('./routes/getParts')
 const authRoutes = require('./routes/shopifyAuth');
 const homeRoutes = require('./routes/homePage');
-const { connectDB } = require('./db/db');
+const addProduct = require('./routes/addProducts')
 
 const app = express();
 app.use(cors());
 
+// JSON body parsing enable
+app.use(express.json());
 
+// Agar form-data ya urlencoded aa raha hai
+app.use(express.urlencoded({ extended: true }));
 connectDB()
 const PORT = process.env.PORT || 3000;
 app.use('/data', express.static(path.join(__dirname, 'data')));
@@ -21,6 +26,7 @@ app.use('/js/three', express.static(path.join(__dirname, 'node_modules/three/bui
 app.use('/api/', Parts)
 app.use('/', authRoutes);
 app.use('/', homeRoutes);
+app.use('/', addProduct);
 app.listen(PORT, () => {
   console.log(`Server running at: http://localhost:${PORT}`);
 });
