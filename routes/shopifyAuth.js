@@ -1,7 +1,7 @@
 const express = require('express');
 const axios = require('axios');
 const crypto = require('crypto');
-
+const Shop = require("../models/shops");
 const router = express.Router();
 
 // Nonce generator (state parameter ke liye)
@@ -23,26 +23,40 @@ router.get('/auth', (req, res) => {
   res.redirect(installUrl);
 });
 
-// Step 2: Handle Shopify callback and exchange code for access token
-router.get('/auth/callback', async (req, res) => {
-  const { shop, code, state } = req.query;
 
-  // TODO: Verify state parameter here for security
 
+router.get("/auth/callback", async (req, res) => {
+  const { shop, code } = req.query;
+
+  if (!shop || !code) {
+    return res.status(400).send("Missing shop or code");
+  }
+console.log(code,'code')
   try {
-    const tokenResponse = await axios.post(`https://${shop}/admin/oauth/access_token`, {
-      client_id: process.env.API_KEY,
-      client_secret: process.env.API_SECRET,
-      code,
-    });
+    // Shopify se token exchange
+    const tokenResponse = await axios.post(
+      `https://${shop}/admin/oauth/access_token`,
+      {
+        client_id: process.env.API_KEY,
+        client_secret: process.env.API_SECRET,
+        code,
+      }
+    );
 
     const accessToken = tokenResponse.data.access_token;
 
-    // Save token to DB (or wherever needed)
-    res.send('App installed! Access Token: ' + accessToken);
+    // DB me save/update
+    await Shop.findOneAndUpdate(
+      { shopDomain: shop },
+      { accessToken },
+      { upsert: true, new: true }
+    );
+
+    console.log(`✅ Token saved for ${shop}`);
+    res.send("App Installed & Token Saved in DB!");
   } catch (error) {
-    console.error(error);
-    res.status(500).send('Error exchanging token');
+    console.error("❌ Error exchanging token:", error.response?.data || error.message);
+    res.status(500).send("Error exchanging token");
   }
 });
 
