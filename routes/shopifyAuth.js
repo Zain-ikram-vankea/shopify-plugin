@@ -23,17 +23,10 @@ router.get('/auth', (req, res) => {
   res.redirect(installUrl);
 });
 
-
-
 router.get("/auth/callback", async (req, res) => {
   const { shop, code } = req.query;
 
-  if (!shop || !code) {
-    return res.status(400).send("Missing shop or code");
-  }
-console.log(code,'code')
   try {
-    // Shopify se token exchange
     const tokenResponse = await axios.post(
       `https://${shop}/admin/oauth/access_token`,
       {
@@ -45,17 +38,24 @@ console.log(code,'code')
 
     const accessToken = tokenResponse.data.access_token;
 
-    // DB me save/update
-    await Shop.findOneAndUpdate(
+    // Token update ya create karo shop ke liye
+    await TokenModel.findOneAndUpdate(
       { shopDomain: shop },
-      { accessToken },
+      { accessToken: accessToken },
       { upsert: true, new: true }
     );
 
-    console.log(`✅ Token saved for ${shop}`);
-    res.send("App Installed & Token Saved in DB!");
+    // Sirf shop name cookie me save karo
+    res.cookie("shop_domain", shop, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict",
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+
+    res.send("✅ Shop name saved in cookie, token saved/updated in DB");
   } catch (error) {
-    console.error("❌ Error exchanging token:", error.response?.data || error.message);
+    console.error(error);
     res.status(500).send("Error exchanging token");
   }
 });
