@@ -7,11 +7,11 @@ const Parts = require('./routes/getParts')
 const authRoutes = require('./routes/shopifyAuth');
 const homeRoutes = require('./routes/homePage');
 const addProduct = require('./routes/addProducts')
+const inject = require("./routes/injection")
 
 const app = express();
 app.use(cors());
 
-// JSON body parsing enable
 app.use(express.json());
 
 // Agar form-data ya urlencoded aa raha hai
@@ -22,8 +22,8 @@ app.use('/data', express.static(path.join(__dirname, 'data')));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/models', express.static(path.join(__dirname, 'models')));
 app.use('/js/three', express.static(path.join(__dirname, 'node_modules/three/build')));
-
 app.use('/api/', Parts)
+app.use('/shopify', inject)
 app.use('/', authRoutes);
 app.use('/', homeRoutes);
 app.use('/', addProduct);

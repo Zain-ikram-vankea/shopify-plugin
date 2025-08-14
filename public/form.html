@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Shopify Product</title>
+  <link rel="stylesheet" href="css/form.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <div class="form-card">
+      <h2>Add Product to Shopify</h2>
+      <form id="productForm" enctype="multipart/form-data">
+        
+        <div class="form-group">
+          <label>Title:</label>
+          <input type="text" name="title" required />
+        </div>
+
+        <div class="form-group">
+          <label>Description (HTML):</label>
+          <textarea name="body_html" required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Vendor:</label>
+          <input type="text" name="vendor" required />
+        </div>
+
+        <div class="form-group">
+          <label>Product Type:</label>
+          <input type="text" name="product_type" required />
+        </div>
+
+        <div class="form-group file-group">
+          <label>Upload Images</label>
+          <div class="file-input">
+            <input type="file" name="images" multiple accept="image/*" />
+            <span class="file-button">Choose Files</span>
+            <span class="file-label">No files selected</span>
+          </div>
+        </div>
+
+        <div class="form-group file-group">
+          <label>Upload 3D Model</label>
+          <div class="file-input">
+            <input type="file" name="model" accept=".glb,.usdz" />
+            <span class="file-button">Choose File</span>
+            <span class="file-label">No file selected</span>
+          </div>
+        </div>
+
+        <button type="submit" class="submit-btn">Add Product</button>
+      </form>
+
+      <div id="result" class="result-container"></div>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('productForm');
+    const fileInputs = document.querySelectorAll('input[type="file"]');
+
+    // Update file input labels
+    fileInputs.forEach(input => {
+      input.addEventListener('change', (e) => {
+        const label = e.target.nextElementSibling.nextElementSibling;
+        if (e.target.files.length > 0) {
+          if (e.target.multiple) {
+            label.textContent = `${e.target.files.length} files selected`;
+          } else {
+            label.textContent = e.target.files[0].name;
+          }
+        } else {
+          label.textContent = e.target.multiple ? 'No files selected' : 'No file selected';
+        }
+      });
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const resultContainer = document.getElementById('result');
+      resultContainer.innerHTML = '<div class="loading">Processing...</div>';
+
+      const formData = new FormData(form);
+
+      try {
+        const response = await fetch('/add-product', {
+          method: 'POST',
+          body: formData
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+          resultContainer.innerHTML = `<div class="success">Product added successfully!</div>
+                                      <pre>${JSON.stringify(result, null, 2)}</pre>`;
+        } else {
+          resultContainer.innerHTML = `<div class="error">Error: ${result.error || 'Failed to add product'}</div>
+                                      <pre>${JSON.stringify(result, null, 2)}</pre>`;
+        }
+      } catch (err) {
+        resultContainer.innerHTML = `<div class="error">Error: ${err.message}</div>`;
+      }
+    });
+  </script>
+</body>
+</html>

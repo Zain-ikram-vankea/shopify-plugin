@@ -51,9 +51,9 @@ router.get("/auth/callback", async (req, res) => {
     // Sirf shop name cookie me save karo
     res.cookie("shop_domain", shop, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production" ? true : false, // Prod me HTTPS only
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-      maxAge: 24 * 60 * 60 * 1000, // 1 day
+      secure: false,     // HTTPS ke bina bhi kaam kare
+      sameSite: "lax",
+      maxAge: 24 * 60 * 60 * 1000
     });
 
     res.send("✅ Shop name saved in cookie, token saved/updated in DB");
