@@ -7,7 +7,6 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-// 📌 Profile images storage
 const product = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
