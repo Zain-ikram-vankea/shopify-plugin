@@ -39,8 +39,9 @@ const finalUpload = multer({ storage: { _handleFile: dynamicStorage, _removeFile
       return res.status(400).json({ error: "All fields are required" });
     }
 
-    const shop = req.cookies.shop;
-console.log(shop)
+    const shop = req.cookies.shop_domain
+    console.log(shop)
+
     try {
       const accessToken = await getTokenByShop(shop);
       if (!accessToken) return res.status(404).json({ error: "Token not found" });
