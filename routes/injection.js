@@ -8,20 +8,36 @@ const { getTokenByShop } = require("../controllers/getTokenByShop");
 async function injectModelViewer(shop, accessToken) {
 
   const snippetCode = `
-{% if product.metafields['custom']['3d_model'] %}
+{% if model_field and model_field.value != blank %}
+  <!-- Load model-viewer script -->
+  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
   <model-viewer
-    src="{{ product.metafields['custom']['3d_model'] }}"
-    alt="{{ product.title }}"
-    camera-controls
-    auto-rotate
+    src="{{ model_field.value }}"
+    alt="{{ product.title | escape }}"
     ar
     ar-modes="webxr scene-viewer quick-look"
-    style="width:100%; height:500px;"
-  ></model-viewer>
+    camera-controls
+    auto-rotate
+    shadow-intensity="1"
+    style="width: 100%; height: 500px;"
+  >
+    <button slot="ar-button" class="button button--full-width">
+      View in your space
+    </button>
+  </model-viewer>
+
+{% elsif product.featured_image %}
+  <!-- Show product image -->
+  <img
+    src="{{ product.featured_image | img_url: '1024x1024' }}"
+    alt="{{ product.title | escape }}"
+    style="width: 100%; height: auto;"
+  >
+
 {% else %}
-  {% for image in product.images %}
-     {% render 'product-media-gallery', media: product.media %}
-  {% endfor %}
+  <!-- Shopify fallback text -->
+  <p>No media available for this product.</p>
 {% endif %}
 
 `;

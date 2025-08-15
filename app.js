@@ -7,7 +7,7 @@ const Parts = require('./routes/getParts')
 const authRoutes = require('./routes/shopifyAuth');
 const homeRoutes = require('./routes/homePage');
 const addProduct = require('./routes/addProducts')
-const inject = require("./routes/injectFileRoute")
+const inject = require("./routes/injection")
 
 const app = express();
 app.use(cors());
