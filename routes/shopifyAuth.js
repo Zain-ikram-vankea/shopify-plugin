@@ -3,6 +3,7 @@ const axios = require('axios');
 const crypto = require('crypto');
 const Shop = require("../models/shops");
 const router = express.Router();
+const { injectModelViewer } = require("../controllers/injectFile")
 
 // Nonce generator (state parameter ke liye)
 function generateNonce() {
@@ -56,7 +57,7 @@ router.get("/auth/callback", async (req, res) => {
       maxAge: 24 * 60 * 60 * 1000
     });
 
-
+    const result = await injectModelViewer(shop, accessToken);
 
     res.redirect("/form");
   } catch (error) {

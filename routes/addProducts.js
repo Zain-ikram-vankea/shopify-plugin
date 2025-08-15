@@ -39,8 +39,8 @@ const finalUpload = multer({ storage: { _handleFile: dynamicStorage, _removeFile
       return res.status(400).json({ error: "All fields are required" });
     }
 
-    const shop = "3d-model-project.myshopify.com";
-
+    const shop = req.cookies.shop;
+console.log(shop)
     try {
       const accessToken = await getTokenByShop(shop);
       if (!accessToken) return res.status(404).json({ error: "Token not found" });

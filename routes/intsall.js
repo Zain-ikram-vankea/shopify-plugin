@@ -5,14 +5,13 @@ const fs = require('fs');
 const router = express.Router();
 
 // Body parser
-
-
-// Serve static HTML
-router.get("/install", (req, res) => {
+router.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "../public/install.html"));
 });
+router.get('/form', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/form.html'));
+});
 
-// Handle form submission
 router.post("/installation", (req, res) => {
   const shop = req.body.shop;
   if (!shop) return res.send("Please enter your Shopify store domain.");
