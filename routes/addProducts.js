@@ -40,7 +40,7 @@ const finalUpload = multer({ storage: { _handleFile: dynamicStorage, _removeFile
     }
 
     const shop = req.cookies.shop_domain
-    console.log(shop)
+
 
     try {
       const accessToken = await getTokenByShop(shop);
