@@ -56,9 +56,9 @@ router.get("/auth/callback", async (req, res) => {
       maxAge: 24 * 60 * 60 * 1000
     });
 
-    res.send("✅ Shop name saved in cookie, token saved/updated in DB");
 
-    res.send("App Installed & Token Saved in DB!");
+
+    res.redirect("/form");
   } catch (error) {
     console.error("❌ Error exchanging token:", error.response?.data || error.message);
     res.status(500).send("Error exchanging token");

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Install Our Shopify App</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; margin-top: 100px; }
+    input { padding: 10px; width: 300px; }
+    button { padding: 10px 20px; margin-left: 10px; }
+  </style>
+</head>
+<body>
+  <h1>Install Our Shopify App</h1>
+  <p>Enter your store name to get started:</p>
+
+  <form action="/installation" method="POST">
+    <input type="text" name="shop" placeholder="yourstore.myshopify.com" required>
+    <button type="submit">Install App</button>
+  </form>
+
+  <p>After clicking Install, you'll be redirected to Shopify to authorize the app.</p>
+</body>
+</html>

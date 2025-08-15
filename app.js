@@ -8,6 +8,7 @@ const authRoutes = require('./routes/shopifyAuth');
 const homeRoutes = require('./routes/homePage');
 const addProduct = require('./routes/addProducts')
 const inject = require("./routes/injection")
+const install = require("./routes/intsall")
 
 const app = express();
 app.use(cors());
@@ -27,6 +28,7 @@ app.use('/shopify', inject)
 app.use('/', authRoutes);
 app.use('/', homeRoutes);
 app.use('/', addProduct);
+app.use('/', install);
 app.listen(PORT, () => {
   console.log(`Server running at: http://localhost:${PORT}`);
 });
