@@ -8,9 +8,9 @@ const { getTokenByShop } = require("../controllers/getTokenByShop");
 async function injectModelViewer(shop, accessToken) {
 
   const snippetCode = `
-{% if product.metafields.custom.3d_model %}
+{% if product.metafields['custom']['3d_model'] %}
   <model-viewer
-    src="{{ product.metafields.custom.3d_model }}"
+    src="{{ product.metafields['custom']['3d_model'] }}"
     alt="{{ product.title }}"
     camera-controls
     auto-rotate
@@ -20,9 +20,10 @@ async function injectModelViewer(shop, accessToken) {
   ></model-viewer>
 {% else %}
   {% for image in product.images %}
-    <img src="{{ image.src | img_url: '1024x1024' }}" alt="{{ image.alt }}">
+     {% render 'product-media-gallery', media: product.media %}
   {% endfor %}
 {% endif %}
+
 `;
 
   try {
